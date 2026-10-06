@@ -13,13 +13,19 @@
     body {
       margin: 0;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       background: linear-gradient(135deg, #fecdd3, #fda4af);
       font-family: Georgia, serif;
       text-align: center;
+      overflow-x: hidden;
     }
+    #start {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s;
+    }
+    #start.hide { opacity: 0; pointer-events: none; }
     button.title {
       font-family: inherit;
       font-size: clamp(2rem, 8vw, 4rem);
@@ -33,59 +39,121 @@
       animation: pulse 2s infinite;
     }
     @keyframes pulse { 50% { transform: scale(1.06); } }
-    .overlay {
+
+    /* flower transition */
+    #flowers {
       position: fixed;
       inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 10;
+    }
+    .flower {
+      position: absolute;
+      bottom: -80px;
+      animation: bloom linear forwards;
+    }
+    @keyframes bloom {
+      0%   { transform: translateY(0) rotate(0) scale(0.4); opacity: 0; }
+      15%  { opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateY(-115vh) rotate(var(--spin)) scale(1.2); opacity: 0; }
+    }
+
+    /* letter */
+    #letter-page {
       display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 1rem;
+      min-height: 100vh;
+      padding: 2rem 1rem 3rem;
     }
-    .overlay.open { display: flex; }
-    .card {
-      background: #fff;
-      border-radius: 1rem;
-      padding: 2rem;
-      max-width: 32rem;
-      max-height: 85vh;
-      overflow-y: auto;
-      color: #333;
-      font-size: 1.2rem;
-      line-height: 1.6;
-      white-space: pre-line;
-    }
-    .card button {
-      margin-top: 1.5rem;
-      font-family: inherit;
-      font-size: 1rem;
-      padding: 0.5rem 1.5rem;
-      border: none;
+    #letter-page.show { display: block; }
+    .letter {
+      max-width: 36rem;
+      margin: 0 auto;
+      padding: 2.5rem 2rem;
+      background: #fffaf0;
+      background-image: repeating-linear-gradient(transparent, transparent 31px, #f3e3d3 32px);
       border-radius: 0.5rem;
-      background: #e11d48;
-      color: #fff;
-      cursor: pointer;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+      color: #4a3333;
+      text-align: left;
+      font-size: 1.2rem;
+      line-height: 32px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1.2s, transform 1.2s;
     }
+    #letter-page.show .letter { opacity: 1; transform: none; }
+    .letter p { margin: 0 0 32px; }
+    .letter h1 {
+      margin: 0 0 32px;
+      font-size: 1.8rem;
+      font-weight: normal;
+      font-style: italic;
+      color: #be123c;
+    }
+    .letter ul { list-style: none; margin: 0 0 32px; padding: 0 0 0 1rem; }
+    .letter li { font-weight: bold; color: #be123c; }
+    .sign { text-align: right; font-style: italic; margin-bottom: 0 !important; }
   </style>
 </head>
 <body>
-  <button class="title" id="open">💖 Happy Anniversary 💖</button>
+  <div id="start">
+    <button class="title" id="open">💖 Happy Anniversary 💖</button>
+  </div>
 
-  <div class="overlay" id="overlay">
-    <div class="card">
-      <div id="message"></div>
-      <button id="close">Close</button>
+  <div id="flowers"></div>
+
+  <div id="letter-page">
+    <div class="letter">
+      <h1>Happy 6 months anniversary, my sunshine 🌻</h1>
+      <p>I want to thank you for being patient with me this far and always giving your everything in this relationship.</p>
+      <p>Through highs and lows you stuck by my side. From early mornings to late nights, you were there when I needed you.</p>
+      <p>Someone like you... I cannot explain how thankful I am for you.</p>
+      <p>I want us to continue to put God first at all times and always at the center, because all the glory and honor goes to Him for our relationship.</p>
+      <p>You are:</p>
+      <ul>
+        <li>Amazing</li>
+        <li>Loving</li>
+        <li>Sweet</li>
+        <li>Kind</li>
+        <li>Giving</li>
+        <li>Servant</li>
+        <li>Fearfully and wonderfully made in the image of God</li>
+      </ul>
+      <p>Never change, never give up.</p>
+      <p class="sign">Your baby<br>I love you ❤️</p>
     </div>
   </div>
 
   <script>
-    // >>> Replace the text below with your anniversary message <<<
-    const MESSAGE = "YOUR MESSAGE GOES HERE";
+    const EMOJIS = ["🌸", "🌷", "🌹", "🌻", "🌼", "💐", "🌺"];
+    const start = document.getElementById("start");
+    const flowers = document.getElementById("flowers");
+    const letterPage = document.getElementById("letter-page");
 
-    const overlay = document.getElementById("overlay");
-    document.getElementById("message").textContent = MESSAGE;
-    document.getElementById("open").onclick = () => overlay.classList.add("open");
-    document.getElementById("close").onclick = () => overlay.classList.remove("open");
+    document.getElementById("open").onclick = () => {
+      start.classList.add("hide");
+
+      for (let i = 0; i < 70; i++) {
+        const f = document.createElement("span");
+        f.className = "flower";
+        f.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+        f.style.left = Math.random() * 100 + "vw";
+        f.style.fontSize = 28 + Math.random() * 48 + "px";
+        f.style.animationDuration = 2 + Math.random() * 1.5 + "s";
+        f.style.animationDelay = Math.random() * 1 + "s";
+        f.style.setProperty("--spin", Math.random() * 360 - 180 + "deg");
+        flowers.appendChild(f);
+      }
+
+      setTimeout(() => {
+        start.style.display = "none";
+        letterPage.classList.add("show");
+        window.scrollTo(0, 0);
+      }, 2000);
+      setTimeout(() => flowers.replaceChildren(), 4800);
+    };
 
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("sw.js");
