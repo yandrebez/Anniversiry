@@ -1,0 +1,12 @@
+{
+  "name": "Happy Anniversary",
+  "short_name": "Anniversary",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fecdd3",
+  "theme_color": "#e11d48",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
